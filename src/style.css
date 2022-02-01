@@ -1,0 +1,15 @@
+@font-face {
+	font-family: 'Gilroy';
+	src: url('./Gilroy-Medium.woff2');
+}
+html {
+	scroll-behavior: smooth;
+}
+body {
+	margin: 0;
+	font-family: 'Gilroy', sans-serif;
+}
+h1 {
+	text-align: center;
+	margin: 40px 0;
+}

@@ -1,39 +1,39 @@
+import { array, number } from 'prop-types';
 import React from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import BurgerMenu from '../burger-menu.svg';
 import Tertiary from './tertiary';
-
 const Container = styled.div`
-	user-select: none;
+	border-radius: 5px;
 	display: flex;
 	flex-direction: column;
-	border-radius: 5px;
+	user-select: none;
 	& .secondary-title {
-		display: flex;
-		padding: 0 0 0 20px;
-		font-weight: 700;
-		font-size: 14px;
 		align-items: center;
-		border-radius: 8px;
 		background: white;
+		border-radius: 8px;
+		display: flex;
 		display: flex;
 		flex-direction: column;
+		font-size: 14px;
+		font-weight: 700;
+		padding: 0 0 0 20px;
 		& .secondary-name-container {
+			border-radius: 8px;
+			display: flex;
+			margin: 10px 0 0 0;
+			padding: 8px;
+			width: calc(100% - 16px);
 			box-shadow: ${p =>
 				p.isDragging
 					? '12px 12px 15px #ebebeb, -12px -12px 15px #ffffff'
 					: '0'};
 			border: 1px solid ${p => (p.isDragging ? 'transparent' : 'lightgrey')};
-			width: calc(100% - 16px);
-			margin: 10px 0 0 0;
-			border-radius: 8px;
-			padding: 8px;
-			display: flex;
 			& .secondary-handle {
-				width: 24px;
 				height: 24px;
 				margin-right: 10px;
+				width: 24px;
 			}
 			& .secondary-name {
 				margin: 4px 0 0 0;
@@ -41,45 +41,44 @@ const Container = styled.div`
 		}
 	}
 `;
-
 const Secondary = ({ childs, primaryIndex }) => (
 	<Container>
-		{childs.map((child, index) => (
+		{childs?.map((child, index) => (
 			<Draggable
-				key={index}
 				draggableId={`secondaryDraggableId${primaryIndex}-${index}`}
-				index={index}>
-				{(provided, snapshot) => (
+				index={index}
+				key={index}>
+				{({ draggableProps, innerRef, dragHandleProps }, { isDragging }) => (
 					<div
-						className="secondary-title"
-						ref={provided.innerRef}
-						isDragging={snapshot.isDragging}
-						{...provided.draggableProps}
-						key={index}>
-						<div className="secondary-name-container">
+						{...draggableProps}
+						className='secondary-title'
+						data-dragging={isDragging ? 'dragging' : ''}
+						key={index}
+						ref={innerRef}>
+						<div className='secondary-name-container'>
 							<img
-								className="secondary-handle"
+								{...dragHandleProps}
+								className='secondary-handle'
 								src={BurgerMenu}
-								{...provided.dragHandleProps}
 							/>
-							<div className="secondary-name">{child.name}</div>
+							<div className='secondary-name'>{child?.name}</div>
 						</div>
 						<Droppable
-							type="tertiary"
-							direction="vertical"
+							type='tertiary'
+							direction='vertical'
 							droppableId={`${primaryIndex}-${index}-droppableTertiaryId`}>
 							{({ innerRef, droppableProps, placeholder }, snapshot) => (
 								<div
-									style={{ width: '100%' }}
+									{...droppableProps}
 									ref={innerRef}
-									{...droppableProps}>
-									{child.childs.map((child, number) => (
+									style={{ width: '100%' }}>
+									{child?.childs?.map((child, number) => (
 										<Tertiary
-											primaryIndex={primaryIndex}
-											key={number}
-											index={number}
-											secondaryIndex={index}
 											child={child}
+											index={number}
+											key={number}
+											primaryIndex={primaryIndex}
+											secondaryIndex={index}
 										/>
 									))}
 									{placeholder}
@@ -92,4 +91,8 @@ const Secondary = ({ childs, primaryIndex }) => (
 		))}
 	</Container>
 );
+Secondary.propTypes = {
+	childs: array,
+	primaryIndex: number.isRequired,
+};
 export default Secondary;

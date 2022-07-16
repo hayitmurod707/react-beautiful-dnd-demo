@@ -5,11 +5,12 @@
 html {
 	scroll-behavior: smooth;
 }
-body {
+body,
+button {
 	margin: 0;
 	font-family: 'Gilroy', sans-serif;
 }
-h1 {
+h2 {
 	text-align: center;
 	margin: 40px 0;
 }

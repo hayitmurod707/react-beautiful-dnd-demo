@@ -1,28 +1,31 @@
+import { array, number } from 'prop-types';
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import BurgerMenu from '../burger-menu.svg';
-
 const Container = styled.div`
-	user-select: none;
+	border-radius: 5px;
 	display: flex;
 	flex-direction: column;
-	border-radius: 5px;
+	user-select: none;
 	& .section-child-title {
-		width: calc(100% - 60px);
-		display: flex;
-		padding: 8px 16px;
-		margin: 8px 0 8px 26px;
-		font-weight: 700;
-		font-size: 14px;
 		align-items: center;
+		background: white;
 		border-radius: 8px;
 		border: 1px solid lightgrey;
-		background: white;
+		display: flex;
+		font-size: 14px;
+		font-weight: 700;
+		margin: 8px 0 8px 26px;
+		padding: 8px 16px;
+		width: calc(100% - 60px);
+		&[data-dragging='dragging'] {
+			background: lightgreen;
+		}
 		& img {
-			width: 24px;
 			height: 24px;
 			margin-right: 10px;
+			width: 24px;
 		}
 		& .section-child-name {
 			display: inline-block;
@@ -32,34 +35,31 @@ const Container = styled.div`
 		background: lightgreen;
 	}
 `;
-
 const SectionItem = ({ childs, index: columnIndex }) => (
 	<Container>
-		{childs.map((child, index) => {
-			return (
-				<Draggable
-					key={index}
-					draggableId={`${columnIndex}-${index}`}
-					index={index}>
-					{({ innerRef, draggableProps, dragHandleProps }, snapshot) => (
-						<div
-							className={
-								snapshot.isDragging
-									? 'section-child-title child-dragging'
-									: 'section-child-title'
-							}
-							id={`${columnIndex}-${index}`}
-							ref={innerRef}
-							isDragging={snapshot.isDragging}
-							{...draggableProps}
-							key={index}>
-							<img src={BurgerMenu} {...dragHandleProps} />
-							<div className="section-child-name">{child.name}</div>
-						</div>
-					)}
-				</Draggable>
-			);
-		})}
+		{childs?.map(({ name }, index) => (
+			<Draggable
+				draggableId={`${columnIndex}-${index}`}
+				index={index}
+				key={index}>
+				{({ innerRef, draggableProps, dragHandleProps }, { isDragging }) => (
+					<div
+						{...draggableProps}
+						className='section-child-title'
+						data-dragging={isDragging ? 'dragging' : ''}
+						id={`${columnIndex}-${index}`}
+						key={index}
+						ref={innerRef}>
+						<img {...dragHandleProps} src={BurgerMenu} />
+						<div className='section-child-name'>{name}</div>
+					</div>
+				)}
+			</Draggable>
+		))}
 	</Container>
 );
+SectionItem.propTypes = {
+	childs: array,
+	index: number.isRequired,
+};
 export default SectionItem;
